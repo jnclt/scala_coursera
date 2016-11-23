@@ -25,7 +25,7 @@ import org.scalatest.junit.JUnitRunner
  */
  @RunWith(classOf[JUnitRunner])
   class ListsSuite extends FunSuite {
- 
+
   /**
    * Tests are written using the `test` operator which takes two arguments:
    *
@@ -46,8 +46,8 @@ import org.scalatest.junit.JUnitRunner
    *
    * This allows tests to be written in a more readable manner:
    */
-  test("one plus one is three?") {
-    assert(1 + 1 == 3) // This assertion fails! Go ahead and fix it.
+  test("one plus two is three?") {
+    assert(1 + 2 == 3) // This assertion fails! Go ahead and fix it.
   }
 
 
@@ -71,8 +71,8 @@ import org.scalatest.junit.JUnitRunner
    *
    * We recommend to always use the `===` equality operator when writing tests.
    */
-  test("details why one plus one is not three") {
-    assert(1 + 1 === 3) // Fix me, please!
+  test("details why one plus two is three") {
+    assert(1 + 2 === 3) // Fix me, please!
   }
 
   /**
@@ -117,10 +117,38 @@ import org.scalatest.junit.JUnitRunner
     assert(sum(List(1,2,0)) === 3)
   }
 
+  test("sum of the empty list is zero") {
+    assert(sum(List()) === 0)
+  }
+
+  test("sum of a list of zeroes is zero") {
+    assert(sum(List(0,0)) === 0)
+  }
+
+  test("negative sum of negative numbers") {
+    assert(sum(List(-5,-4,8)) === -1)
+  }
+
   test("max of a few numbers") {
     assert(max(List(3, 7, 2)) === 7)
   }
 
+  test("max of one number") {
+    assert(max(List(0)) === 0)
+  }
 
+  test("max of a few negative numbers") {
+    assert(max(List(-2,-5,-100)) === -2)
+  }
+
+  test("max of equal numbers") {
+    assert(max(List(3, 3, 3)) === 3)
+  }
+
+  test("max of the empty list throws NoSuchElementException") {
+    intercept[NoSuchElementException] {
+      max(List())
+    }
+  }
 
 }
