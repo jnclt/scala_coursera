@@ -20,7 +20,17 @@ object Main {
   /**
    * Exercise 2
    */
-    def balance(chars: List[Char]): Boolean = ???
+    def balance(chars: List[Char]): Boolean = {
+      def stack_index(index:Int, chars: List[Char]): Int = {
+        if (index < 0) index
+        else if (chars.isEmpty) 0
+        else if (chars.head == '(') stack_index(index+1, chars.tail)
+        else if(chars.head == ')') stack_index(index-1, chars.tail)
+        else stack_index(index, chars.tail)
+        }
+
+        stack_index(0, chars) == 0
+    }
 
   /**
    * Exercise 3
