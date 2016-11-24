@@ -32,14 +32,16 @@ object Main {
         stack_index(0, chars) == 0
     }
 
+
   /**
    * Exercise 3
    */
     def countChange(money: Int, coins: List[Int]): Int = {
-      def sum(xs: List[Int]): Int = {
-        if (xs.isEmpty) 0 else xs.head + sum(xs.tail)
-      }
-      if (money == 0) 1 else return sum(for (coin <- coins if coin <= money) yield countChange(money-coin, coins))
+      if (coins.isEmpty) return 0
+      def coin = coins.head
+      if (money == coin) 1 + countChange(money, coins.tail)
+      else if (money > coin) countChange(money-coin, coins) + countChange(money, coins.tail)
+      else countChange(money, coins.tail)
 
     }
   }
