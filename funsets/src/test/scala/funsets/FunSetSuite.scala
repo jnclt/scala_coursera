@@ -87,28 +87,70 @@ class FunSetSuite extends FunSuite {
    * function "ignore" by "test".
    */
   test("singletonSet(1) contains 1") {
+    assert(contains(singletonSet(1), 1))
+  }
 
-    /**
-     * We create a new instance of the "TestSets" trait, this gives us access
-     * to the values "s1" to "s3".
-     */
-    new TestSets {
-      /**
-       * The string argument of "assert" is a message that is printed in case
-       * the test fails. This helps identifying which assertion failed.
-       */
-      assert(contains(s1, 1), "Singleton")
-    }
+  test("singletonSet(1) doesn't contain 2") {
+    assert(!contains(singletonSet(1), 2))
   }
 
   test("union contains all elements of each set") {
-    new TestSets {
-      val s = union(s1, s2)
-      assert(contains(s, 1), "Union 1")
-      assert(contains(s, 2), "Union 2")
-      assert(!contains(s, 3), "Union 3")
-    }
+      val s = union(singletonSet(1), singletonSet(2))
+      assert(contains(s, 1), "contains 1")
+      assert(contains(s, 2), "contains 2")
+      assert(!contains(s, 3), "doesn't contain 3")
   }
 
+  test("intersect contains common elements from each set") {
+      val u1 = union(singletonSet(1), singletonSet(2))
+      val u2 = union(singletonSet(2), singletonSet(3))
+      val i = intersect(u1, u2)
+      assert(contains(i, 2), "contains 2")
+      assert(!contains(i, 1), "doesn't contain 1")
+      assert(!contains(i, 3), "doesn't contain 3")
+  }
 
+  test("diff contains elements present only in the first set") {
+      val u1 = union(singletonSet(1), singletonSet(2))
+      val u2 = union(singletonSet(2), singletonSet(3))
+      val d = diff(u1, u2)
+      assert(contains(d, 1), "contains 1")
+      assert(!contains(d, 2), "doesn't contain 2")
+      assert(!contains(d, 3), "doesn't contain 3")
+  }
+
+  test("filtered set contains only elements from the original set satisfying predicate") {
+    val s = union(singletonSet(2), union(singletonSet(3), singletonSet(4)))
+    val f = filter(s, (x: Int) => x % 2 == 0)
+    assert(contains(f, 2))
+    assert(contains(f, 4))
+    assert(!contains(f, 3))
+    assert(!contains(f, 6))
+  }
+
+  test("forall checks condition for all elements in the set") {
+    val s = (x:Int) => (x % 2 == 0) && (x > 100)
+    assert(forall(s, (x:Int) => x > 50))
+    assert(forall(s, (x:Int) => x > 100))
+    assert(forall(s, (x:Int) => x % 2 == 0))
+    assert(!forall(s, (x:Int) => x % 4 == 0))
+    assert(!forall(s, (x:Int) => x == 101))
+  }
+
+  test("exists") {
+    val s = (x:Int) => (x % 2 == 0) && (x > 100)
+    assert(exists(s, (x:Int) => x == 102))
+    assert(exists(s, (x:Int) => x > 100))
+    assert(!exists(s, (x:Int) => x % 2 == 1))
+    assert(!exists(s, (x:Int) => x == 101))
+  }
+
+  test("map") {
+    val s = (x:Int) => (x % 2 == 0) && (x > 100)
+    def inc(x:Int): Int = x+1
+    val m = map(s, inc)
+    assert(forall(m, (x:Int) => x % 2 == 1))
+    assert(forall(m, (x:Int) => x > 102))
+    assert(!exists(m, (x:Int) => x == 101))
+  }
 }
