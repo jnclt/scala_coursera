@@ -114,6 +114,8 @@ class Empty extends TweetSet {
   def union(that: TweetSet): TweetSet = that.unionAcc(new Empty)
 
   def unionAcc(acc: TweetSet): TweetSet = acc
+
+  def mostRetweeted: Tweet = this
   /**
    * The following methods are already implemented
    */
@@ -143,6 +145,10 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     right.unionAcc(leftUnion)
   }
 
+  def mostRetweeted: Tweet = {
+      val submax = if (left.mostRetweeted.retweets > right.mostRetweeted.retweets) left else right
+      if (elem.retweets > submax.retweets) elem else submax
+  }
   /**
    * The following methods are already implemented
    */
