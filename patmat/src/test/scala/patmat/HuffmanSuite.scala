@@ -34,6 +34,19 @@ class HuffmanSuite extends FunSuite {
   }
 
 
+  test("times on list of \"hoollo\"") {
+    assert(times(string2Chars("hoollo")) === List(('o', 3), ('l', 2), ('h', 1)))
+  }
+
+  test("singleton on list of two") {
+    assert(singleton(List(Leaf('e',1), Leaf('t',2))) === false)
+  }
+
+  test("singleton on list of one") {
+    assert(singleton(List(Leaf('e',1))) === true)
+  }
+
+
   test("makeOrderedLeafList for some frequency table") {
     assert(makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))) === List(Leaf('e',1), Leaf('t',2), Leaf('x',3)))
   }
