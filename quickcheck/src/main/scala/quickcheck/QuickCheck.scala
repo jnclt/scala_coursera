@@ -24,7 +24,7 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
   }
 
   property("minimum is the smaller of two") = forAll { (e1: A, e2: A) =>
-      findMin(insert(e2, insert(e1, empty))) == (if (e1 < e2) e1 else e2)
+      findMin(insert(e2, insert(e1, empty))) == (if (ord.lt(e1, e2)) e1 else e2)
   }
 
   property("insert and deleteMin on empty heap gives empty heap") = forAll { (e: A) =>
@@ -43,7 +43,7 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
   def isNonDecreasing(sequence: List[A]): Boolean = sequence match {
       case Nil => true
       case x::Nil => true
-      case x1::x2::xs => (x1 <= x2) && isNonDecreasing(x2::xs)
+      case x1::x2::xs => ord.lteq(x1,x2) && isNonDecreasing(x2::xs)
   }
 
   property("min of melded heap is min of original heap") = forAll(heapGen, heapGen) { (h1, h2) =>
@@ -57,5 +57,10 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
       else true
   }
 
+  property("insert doesn't change other elements") = forAll(heapGen, arbitrary[A]) { (h:H, e:A) =>
+      val originalElements = getSequenceOfAllMins(h).toSet
+      val resultingElements = getSequenceOfAllMins(insert(e, h)).toSet
+      resultingElements.equals(originalElements.union(Set(e)))
+    }
 
 }
